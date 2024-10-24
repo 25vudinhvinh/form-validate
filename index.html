@@ -42,6 +42,10 @@
             rules: [
                 Validator.isRequired('#fullname'),
                 Validator.isEmail('#email'),
+                Validator.minLength('#password', 6),
+                Validator.confirmed('#password_confirmation', () =>{
+                  return document.querySelector('#form-1 #password').value
+                })
             ]
         })
     </script>
