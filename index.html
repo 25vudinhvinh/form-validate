@@ -44,10 +44,13 @@
                 Validator.isRequired('#email'),
                 Validator.isEmail('#email'),
                 Validator.minLength('#password', 6),
+                Validator.isRequired('#password_confirmation'),
                 Validator.confirmed('#password_confirmation', () =>{
                   return document.querySelector('#form-1 #password').value
                 })
-            ]
+            ], onSubmit: (data) =>{
+              console.log(data)
+            }
         })
     </script>
   </div>

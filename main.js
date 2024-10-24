@@ -9,16 +9,42 @@ const Validator = (options) =>{
            errorMessage = rules[i](inputElement.value)
            if(errorMessage) break
         }
-        
         if(errorMessage){
             errorElement.innerText = errorMessage
             inputElement.parentElement.classList.add('invalid')
+        }else{
+            errorElement.innerText = ''
+            inputElement.parentElement.classList.remove('invalid')
         }
+      
+        return !errorMessage
     }
 
     if (formElement){
-        options.rules.forEach(rule =>{
+        formElement.onsubmit = (e) =>{
+            e.preventDefault()
 
+            let isFormValid = true
+
+            options.rules.forEach((rule) =>{
+            const inputElement = formElement.querySelector(rule.selector)
+              const isValid = validate(inputElement, rule)
+                if(!isValid){
+                    isFormValid = false
+                }
+            })
+
+            if(isFormValid){
+                if (typeof options.onSubmit === 'function'){
+                    const enableInput = formElement.querySelectorAll('[name]')
+                    const formValues = Array.from(enableInput).reduce((values, input) =>{
+                        return (values[input.name] = input.value) && values
+                    }, {})
+                    options.onSubmit(formValues)
+                }
+            }
+        }
+        options.rules.forEach(rule =>{
             if(Array.isArray(selectorRules[rule.selector])){
                 selectorRules[rule.selector].push(rule.test)
             }else{
@@ -27,6 +53,7 @@ const Validator = (options) =>{
 
             const inputElement = formElement.querySelector(rule.selector)
             if (inputElement){
+                const errorElement = inputElement.parentElement.querySelector('.form-message')
                 inputElement.onblur = ()=>{
                     validate(inputElement, rule)
                 }
@@ -38,6 +65,7 @@ const Validator = (options) =>{
         })
     }
 }
+
 
 Validator.isRequired = (selector) =>{
     return {
