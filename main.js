@@ -1,16 +1,34 @@
 const Validator = (options) =>{
     const formElement = document.querySelector(options.form)
+    const selectorRules = {}
+    const validate = (inputElement, rule)=>{
+        const errorElement = inputElement.parentElement.querySelector('.form-message')
+        const rules = selectorRules[rule.selector]
+        let errorMessage 
+        for (var i = 0; i < rules.length; ++i){
+           errorMessage = rules[i](inputElement.value)
+           if(errorMessage) break
+        }
+        
+        if(errorMessage){
+            errorElement.innerText = errorMessage
+            inputElement.parentElement.classList.add('invalid')
+        }
+    }
+
     if (formElement){
         options.rules.forEach(rule =>{
+
+            if(Array.isArray(selectorRules[rule.selector])){
+                selectorRules[rule.selector].push(rule.test)
+            }else{
+                selectorRules[rule.selector] = [rule.test]
+            }
+
             const inputElement = formElement.querySelector(rule.selector)
             if (inputElement){
-                const errorElement = inputElement.parentElement.querySelector('.form-message')
                 inputElement.onblur = ()=>{
-                    const errorMessage = rule.test(inputElement.value)
-                    if(errorMessage){
-                        errorElement.innerText = errorMessage
-                        inputElement.parentElement.classList.add('invalid')
-                    }
+                    validate(inputElement, rule)
                 }
                 inputElement.oninput = ()=>{
                     errorElement.innerText = ''

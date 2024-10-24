@@ -41,6 +41,7 @@
             form: '#form-1',
             rules: [
                 Validator.isRequired('#fullname'),
+                Validator.isRequired('#email'),
                 Validator.isEmail('#email'),
                 Validator.minLength('#password', 6),
                 Validator.confirmed('#password_confirmation', () =>{
