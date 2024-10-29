@@ -2,7 +2,7 @@ const Validator = (options) =>{
     const formElement = document.querySelector(options.form)
     const selectorRules = {}
     const validate = (inputElement, rule)=>{
-        const errorElement = inputElement.parentElement.querySelector('.form-message')
+        const errorElement = getParent(inputElement, options.parentInput).querySelector('.form-message')
         const rules = selectorRules[rule.selector]
         let errorMessage 
         for (var i = 0; i < rules.length; ++i){
@@ -11,13 +11,23 @@ const Validator = (options) =>{
         }
         if(errorMessage){
             errorElement.innerText = errorMessage
-            inputElement.parentElement.classList.add('invalid')
+            getParent(inputElement, options.parentInput).classList.add('invalid')
         }else{
             errorElement.innerText = ''
-            inputElement.parentElement.classList.remove('invalid')
+            getParent(inputElement, options.parentInput).classList.remove('invalid')
         }
       
         return !errorMessage
+    }
+
+    // ham get parentInput
+    const getParent = (element, parent)=>{
+        while(element.parentElement){
+            if(element.parentElement.matches(parent)){
+                return element.parentElement
+            }
+            element = element.parentElement
+        }
     }
 
     if (formElement){
@@ -38,7 +48,8 @@ const Validator = (options) =>{
                 if (typeof options.onSubmit === 'function'){
                     const enableInput = formElement.querySelectorAll('[name]')
                     const formValues = Array.from(enableInput).reduce((values, input) =>{
-                        return (values[input.name] = input.value) && values
+                        values[input.name] = input.value
+                        return values
                     }, {})
                     options.onSubmit(formValues)
                 }
@@ -53,13 +64,13 @@ const Validator = (options) =>{
 
             const inputElement = formElement.querySelector(rule.selector)
             if (inputElement){
-                const errorElement = inputElement.parentElement.querySelector('.form-message')
+                const errorElement = getParent(inputElement, options.parentInput).querySelector('.form-message')
                 inputElement.onblur = ()=>{
                     validate(inputElement, rule)
                 }
                 inputElement.oninput = ()=>{
                     errorElement.innerText = ''
-                    inputElement.parentElement.classList.remove('invalid')
+                    getParent(inputElement, options.parentInput).classList.remove('invalid')
                 }   
             }
         })
