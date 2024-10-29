@@ -63,6 +63,14 @@ const Validator = (options) =>{
                     const formValues = Array.from(enableInput).reduce((values, input) =>{
                         switch(input.type){
                             case 'checkbox':
+                                if(!input.matches(':checked')){
+                                    return values
+                                }
+                                if(!Array.isArray(values[input.name])){
+                                    values[input.name] = []
+                                }
+                                values[input.name].push(input.value)
+                                break
                             case 'radio':
                                 values[input.name] = formElement.querySelector('input[name="'+input.name+'"]:checked').value
                                 break

@@ -33,8 +33,8 @@
 
       <div class="form-group">
         <label for="password_confirmation" class="form-label">Gender</label>
-        <input name="gender"  type="radio" value="male" class="form-control"> Nam
-        <input name="gender"  type="radio" value="female" class="form-control"> Nu
+        <input name="gender"  type="checkbox" value="male" class="form-control"> Nam
+        <input name="gender"  type="checkbox" value="female" class="form-control"> Nu
         <span class="form-message"></span>
       </div>
   
@@ -48,15 +48,15 @@
             form: '#form-1',
             parentInput: '.form-group',
             rules: [
-                Validator.isRequired('#fullname'),
-                Validator.isRequired('#email'),
-                Validator.isEmail('#email'),
-                Validator.minLength('#password', 6),
-                Validator.isRequired('#password_confirmation'),
+                // Validator.isRequired('#fullname'),
+                // Validator.isRequired('#email'),
+                // Validator.isEmail('#email'),
+                // Validator.minLength('#password', 6),
+                // Validator.isRequired('#password_confirmation'),
                 Validator.isRequired('input[name="gender"]'),
-                Validator.confirmed('#password_confirmation', () =>{
-                  return document.querySelector('#form-1 #password').value
-                })
+                // Validator.confirmed('#password_confirmation', () =>{
+                //   return document.querySelector('#form-1 #password').value
+                // })
             ], onSubmit: (data) =>{
               console.log(data)
             }
